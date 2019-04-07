@@ -39,11 +39,14 @@
             <img src="./2.png" alt="图片2">
             <img src="./3.png" alt="图片3">
         </div>
+        <button id="previours">上一张</button>
         <div class="btns">
+
             <button>第一张</button>
             <button>第二张</button>
             <button>第三张</button>
         </div>
+        <button id="next">下一张</button>
     </div>
 
     <script>
@@ -58,46 +61,68 @@
         images.append($first)
         images.prepend($last)
 
-        let btnLen = btns.length 
+        let btnLen = btns.length
+        bindEvent()
+        $("#next").on("click", function () {
+            if(current === (btnLen-1)){
+                goToSlide(0)
+            }else{
+                goToSlide(current+1)
+            }
+        })
+        $("#previours").on("click", function () {
+            if(current === 0){
+                goToSlide(btnLen - 1)
+            }else{
+                goToSlide(current - 1)
+            }
+           
+        })
 
-
-
-        for (let i = 0; i < btnLen; i++) {
-            btns.eq(i).on("click", (e) => {
-                let p;
-                if (current === 0 && i === btnLen-1) {
-                    p = 0
-                    images.css({
-                        transform: "translateX(" + p + "px)"
-                    }).one("transitionend", function () {
-                        images.hide().offset()
-                        p = (i + 1) * (-400);
-                        images.css({
-                            transform: "translateX(" + p + "px)"
-                        }).show()
-                    })
-                } else if (current === btnLen-1 && i === 0) {
-                    p = (current + 2) * (-400)
-                    images.css({
-                        transform: "translateX(" + p + "px)"
-                    }).one("transitionend", function () {
-                        images.hide().offset()
-                        p = (i + 1) * (-400);
-                        images.css({
-                            transform: "translateX(" + p + "px)"
-                        }).show()
-                    })
-                } else {
-                    p = (i + 1) * (-400);
-                    images.css({
-                        transform: "translateX(" + p + "px)"
-                    })
-                }
-                current = i;
+        function bindEvent() {
+            $(".images-wrapper>.btns").on("click", "button", function (e) {
+                // let p;
+                let i = $(e.currentTarget).index();
+                goToSlide(i);
             })
         }
 
-      
+        function a(p, i) {
+            console.log("a内部")
+            console.log(p);
+            images.css({
+                transform: "translateX(" + p + "px)"
+            }).one("transitionend", function () {
+                images.hide().offset()
+                p = (i + 1) * (-400);
+                console.log(2);
+                images.css({
+                    transform: "translateX(" + p + "px)"
+                }).show()
+            })
+        }
+
+        function goToSlide(i) {
+            let p = 0;
+            if (current === 0 && i === btnLen - 1) {
+                p = 0
+                a(p, i);
+            } else if (current === btnLen - 1 && i === 0) {
+                console.log("进入")
+                p = (current + 2) * (-400)
+                console.log("p的值:"+p);
+                a(p, i);
+            } else {
+                p = (i + 1) * (-400);
+                images.css({
+                    transform: "translateX(" + p + "px)"
+                })
+            }
+            current = i;
+
+
+            console.log(current, i);
+        }
     </script>
 </body>
 
