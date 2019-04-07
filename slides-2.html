@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <title>无缝轮播2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .images-wrapper {
+            width: 400px;
+            margin: 0 auto;
+            overflow: hidden;
+
+        }
+
+        .images-wrapper>.images {
+            display: flex;
+            transform: translateX(-400px);
+            transition: all 1s;
+        }
+
+        .images-wrapper>.btns {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="images-wrapper">
+        <div class="images">
+            <img src="./1.png" alt="图片1">
+            <img src="./2.png" alt="图片2">
+            <img src="./3.png" alt="图片3">
+        </div>
+        <div class="btns">
+            <button>第一张</button>
+            <button>第二张</button>
+            <button>第三张</button>
+        </div>
+    </div>
+
+    <script>
+        let btns = $(".images-wrapper>.btns>button")
+        let images = $(".images-wrapper>.images")
+        let current = 0;
+
+
+        let $first = images.children().first().clone() //第一个元素
+        let $last = images.children().last().clone() //最后一个元素
+
+        images.append($first)
+        images.prepend($last)
+
+        let btnLen = btns.length 
+
+
+
+        for (let i = 0; i < btnLen; i++) {
+            btns.eq(i).on("click", (e) => {
+                let p;
+                if (current === 0 && i === btnLen-1) {
+                    p = 0
+                    images.css({
+                        transform: "translateX(" + p + "px)"
+                    }).one("transitionend", function () {
+                        images.hide().offset()
+                        p = (i + 1) * (-400);
+                        images.css({
+                            transform: "translateX(" + p + "px)"
+                        }).show()
+                    })
+                } else if (current === btnLen-1 && i === 0) {
+                    p = (current + 2) * (-400)
+                    images.css({
+                        transform: "translateX(" + p + "px)"
+                    }).one("transitionend", function () {
+                        images.hide().offset()
+                        p = (i + 1) * (-400);
+                        images.css({
+                            transform: "translateX(" + p + "px)"
+                        }).show()
+                    })
+                } else {
+                    p = (i + 1) * (-400);
+                    images.css({
+                        transform: "translateX(" + p + "px)"
+                    })
+                }
+                current = i;
+            })
+        }
+
+      
+    </script>
+</body>
+
+</html>
