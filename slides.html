@@ -76,29 +76,50 @@
         let n = 0;
 
         init()
-        setInterval(() => {
+        let timer = setInterval(() => {
 
             let $img1 = $img.eq(x(n))
 
             let $img2 = $img.eq(x(n + 1))
-            
+
             makeLeft($img1).one("transitionend", (e) => {
                 makeRight($(e.currentTarget))
             })
             makeMiddle($img2)
             n++
         }, 1000)
-        
 
-        function makeLeft($node){
+        document.addEventListener("visibilitychange", function () {
+            console.log(document.visibilityState);
+            if (document.visibilityState === "hidden") {
+                window.clearInterval(timer)
+            } else if (document.visibilityState === "visible") {
+                timer = setInterval(() => {
+
+                    let $img1 = $img.eq(x(n))
+
+                    let $img2 = $img.eq(x(n + 1))
+
+                    makeLeft($img1).one("transitionend", (e) => {
+                        makeRight($(e.currentTarget))
+                    })
+                    makeMiddle($img2)
+                    n++
+                }, 1000)
+            }
+        });
+
+        function makeLeft($node) {
             $node.removeClass("middle right").addClass("left")
             return $node
         }
-        function makeMiddle($node){
+
+        function makeMiddle($node) {
             $node.removeClass("left right").addClass("middle")
             return $node
         }
-        function makeRight($node){
+
+        function makeRight($node) {
             $node.removeClass("middle left").addClass("right")
             return $node
         }
